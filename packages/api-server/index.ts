@@ -28,6 +28,16 @@ const appRouter = trpc
       // this returns us the last 10 messages
       return messages.slice(-input);
     },
+  })
+  .mutation("sendMessage", {
+    input: z.object({
+      user: z.string(),
+      message: z.string(),
+    }),
+
+    resolve({ input }) {
+      messages.push(input);
+    },
   });
 
 const app = express();
