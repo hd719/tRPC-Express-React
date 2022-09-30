@@ -10,8 +10,18 @@ const client = new QueryClient(); // Create a client
 
 const AppContent = () => {
   const hello = trpc.useQuery(["hello"]);
+  const getMessages = trpc.useQuery(["messages"]);
 
-  return <div>{JSON.stringify(hello.data)}</div>;
+  return (
+    <>
+      <div>{JSON.stringify(hello.data)}</div>
+      <div>
+        {getMessages?.data?.map((message) => (
+          <div>{message.message}</div>
+        ))}
+      </div>
+    </>
+  );
 };
 
 const App = () => {

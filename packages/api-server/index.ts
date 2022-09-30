@@ -2,13 +2,33 @@ import express from "express";
 import * as trpc from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
+import { z } from "zod";
+
+interface ChatMessage {
+  user: string;
+  message: string;
+}
+
+const messages: ChatMessage[] = [
+  { user: "h", message: "world" },
+  { user: "d", message: "hi" },
+];
 
 // route is: http://localhost:8081/trpc/hello
-const appRouter = trpc.router().query("hello", {
-  resolve() {
-    return "Hello world!";
-  },
-});
+const appRouter = trpc
+  .router()
+  .query("hello", {
+    resolve() {
+      return "Hello world!";
+    },
+  })
+  .query("messages", {
+    input: z.number().default(10),
+    resolve({ input }) {
+      // this returns us the last 10 messages
+      return messages.slice(-input);
+    },
+  });
 
 const app = express();
 const port = 8081;
